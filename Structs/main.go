@@ -6,28 +6,39 @@ import "fmt"
 	The 'Struct' data structure is a collection of properties that are related together.
 */
 
+type contactInfo struct {
+	email   string
+	zipCode int
+}
+
 type person struct {
-	firstName string
-	lastName  string
+	firstName   string
+	lastName    string
+	contactInfo // alternate way of embedding structs
+	// contact   contactInfo
 }
 
 func main() {
-	/*
-		There are 3 ways of declaring Struct values
-	*/
+	/* Note: when declaring structs in multiple lines, ensure that every single line
+	ends with a comma ',' even if it is the last property. */
 
-	// Method 1
-	// alex := person{"Alex", "Anderson"}
+	joe := person{
+		firstName: "Joe",
+		lastName:  "Party",
+		contactInfo: contactInfo{
+			email:   "joe123@gmail.com",
+			zipCode: 94000,
+		},
+	}
 
-	// Method 2
-	alex := person{firstName: "Alex", lastName: "Anderson"}
-	fmt.Println(alex)
+	joe.updateName("Joseph")
+	joe.print()
+}
 
-	var alexa person
+func (p person) updateName(newFirstName string) {
+	p.firstName = newFirstName
+}
 
-	alexa.firstName = "Alexa"
-	alexa.lastName = "Anderson"
-
-	fmt.Println(alexa)
-	fmt.Printf("%+v", alexa)
+func (p person) print() {
+	fmt.Printf("%+v", p)
 }
