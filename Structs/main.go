@@ -9,6 +9,23 @@ import "fmt"
 	--> Anytime we pass a value to a function, either as a receiver or as an argument,
 		that data is copied in memory
 	--> So that function is always going to be working on a copy of our data structure.
+
+
+	VALUE TYPES:
+	int, string, float, bool, structs --> Use pointers to change these things in a function
+
+	REFERENCE TYPES:
+	slices, maps, channels, pointers, functions --> Don't worry about pointers with these
+
+	When you create a new reference type like a slice, Go will actually create two data structures in memory
+	- an array which contains the list of elements,
+	- and the slice which contains a pointer to the head of that array.
+
+	When you pass a slice or similar reference type to a function, then Go will still create a copy of your slice in memory
+	BUT that copy is going to reference or point to the exact same array (memory address) as your original slice.
+
+	Hence, when you pass a slice or a reference type value to a function and make modifications to that slice inside the function,
+	the changes you made are reflected in your original slice even outside the function.
 */
 
 type contactInfo struct {
