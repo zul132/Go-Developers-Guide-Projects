@@ -14,6 +14,25 @@ import "fmt"
 	This means that we can use these types at any location where a 'bot' would be expected.
 */
 
+/*
+	There are two different kinds of "types":-
+
+	1. Concrete Types
+	   We can directly create values out of a concrete type, which we can then access and modify, create copies of etc.
+	   Eg. map, struct, int, string or custom types like englishBot
+
+	2. Interface Type
+	   We can't directly create values out of an interface type.
+	   Eg. bot
+
+	Notes:
+	- Interfaces are NOT 'generic' types (Go does not have 'generic' types unlike other languages).
+	- Interfaces are 'implicit'.
+	  i.e. We don't manually have to declare that our custom type satisfies some interface.
+	- Interfaces are a contract to help us manage types.
+	  GARBAGE IN -> GARBAGE OUT. They cannot help prevent incorrect implementation of a function's logic.
+*/
+
 type bot interface {
 	getGreeting() string
 }
