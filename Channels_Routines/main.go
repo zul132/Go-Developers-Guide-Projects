@@ -6,20 +6,11 @@ import (
 )
 
 /*
-	Website Status Checker:
-	Channels and Routines are both Go structures that are used for handling concurrent programming.
+	Channels:
+	Channels are a construct in Go used to communicate between different running go routines.
 
-	Serial or Sequential Approach (without concurrency):
-	- For every link, we make a request and then wait till we get a response before logging the response
-	and only then do we move on to the next link. --> Can be an issue if we have many links
-
-	- Since requests are made in serial, the links get printed in the same order as they appear in the slice.
-
-	Concurrent Approach:
-	- Rather than running the requests in serial, we run every request in parallel and whichever request
-	returns a response, we immediately log it.
-
-	- Links get printed in the order in which we get the response, which may differ from the slice order.
+	Channels are a typed construct - the data or messages that we send thru a channel must always be of
+	the same type.
 */
 
 func main() {
@@ -31,17 +22,41 @@ func main() {
 		"http://amazon.com",
 	}
 
+	// string is the type of data we want to communicate over this channel
+	c := make(chan string)
+
 	for _, link := range links {
-		checkLink(link)
+		// Use the 'go' keyword to run the checkLink function inside a brand new Go routine
+		go checkLink(link, c)
+
+		/* If we had printed the value from the channel here instead of outside the for loop
+		   then we would've seen all the links printed out in order.
+		*/
+		// fmt.Println(<-c)
 	}
+
+	/* Whenever we wait for a message to come thru the channel --> the Main routine pauses execution and waits.
+	   i.e. receiving messages from a channel is a Blocking call
+
+	   The reason why we see only 1 link being printed is - Whichever child routine fetches the URL first will pass
+	   the link into the channel --> Main routine receives this link and prints it --> No more lines of code to run
+	   --> Main exits the program
+	*/
+	fmt.Println(<-c)
+	fmt.Println(<-c)
+	fmt.Println(<-c)
+	fmt.Println(<-c)
+	fmt.Println(<-c)
 }
 
-func checkLink(link string) {
+func checkLink(link string, c chan string) {
 	_, err := http.Get(link)
 	if err != nil {
 		fmt.Println(link, "might be down!")
+		c <- "Might be down i think"
 		return
 	}
 
 	fmt.Println(link, "is up!")
+	c <- "Yep its up"
 }
